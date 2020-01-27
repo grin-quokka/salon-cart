@@ -1,13 +1,19 @@
 import React, { ReactElement } from "react";
-import { Container } from "@material-ui/core";
+import { Container, Paper } from "@material-ui/core";
 import CartHeader from "./CartHeader";
+import AddBtnGroup from "./AddBtnGroup";
+import CartList from "./CartList";
 
 interface Props {}
 
 export default function Cart({}: Props): ReactElement {
   return (
     <Container maxWidth="xs">
-      <CartHeader customerName={"조아라"} />
+      <Paper elevation={3}>
+        <CartHeader customerName={"조아라"} />
+        <AddBtnGroup />
+        <CartList />
+      </Paper>
     </Container>
   );
 }
