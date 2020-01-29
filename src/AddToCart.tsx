@@ -11,7 +11,7 @@ import {
 } from "@material-ui/core";
 import { FixedSizeList } from "react-window";
 import CheckIcon from "@material-ui/icons/Check";
-
+import { History, LocationState } from "history";
 interface Props {
   mode: string;
   menu: {
@@ -21,17 +21,68 @@ interface Props {
     discounts: { [discountKey: string]: { name: string; rate: number } };
     currency_code: "string";
   } | null;
+  selectItem: {
+    [itemKey: string]: { count: number; name: string; price: number };
+  }[];
+  handleItemSelect: (
+    itemArr: {
+      [itemKey: string]: { count: number; name: string; price: number };
+    }[]
+  ) => void;
+  history: History<LocationState>;
 }
 
-export default function AddToCart({ mode, menu }: Props): ReactElement {
-  let itemArr: string[] = [];
-  //const [itemArr, setItemArr] = useState<string[]>([]);
+export default function AddToCart({
+  mode,
+  menu,
+  selectItem,
+  handleItemSelect,
+  history
+}: Props): ReactElement {
+  const [itemArr, setItemArr] = useState([...selectItem]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(event.target.checked);
-    console.log(event.target.id);
-    // setItemArr([...itemArr, event.target.id]);
-    itemArr = [...itemArr, event.target.id];
+  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+    if (target.checked && menu !== null) {
+      setItemArr([
+        ...itemArr,
+        {
+          [target.id]: {
+            count: 1,
+            name: menu.items[target.id].name,
+            price: menu.items[target.id].price
+          }
+        }
+      ]);
+    } else {
+      const temp = [...itemArr];
+      temp.some((ele, index) => {
+        if (target.id in ele) {
+          temp.splice(index, 1);
+          return true;
+        }
+
+        return false;
+      });
+
+      // temp.splice(Object.keys(temp).indexOf(target.id), 1);
+      setItemArr(temp);
+    }
+  };
+
+  const handleComplete = () => {
+    // const sorted = itemArr.sort((a, b) => {
+    //   if (Object.keys(a)[0].slice(2) > Object.keys(b)[0].slice(2)) {
+    //     return 1;
+    //   }
+    //   if (Object.keys(a)[0].slice(2) < Object.keys(b)[0].slice(2)) {
+    //     return -1;
+    //   }
+    //   // a must be equal to b
+    //   return 0;
+    // });
+    // console.log(sorted);
+    handleItemSelect(itemArr);
+    history.push("/");
   };
 
   return (
@@ -51,16 +102,17 @@ export default function AddToCart({ mode, menu }: Props): ReactElement {
             itemCount={Object.keys(menu.items).length}
           >
             {({ index, style }) => (
-              <ListItem button style={style} key={index} divider={true}>
+              <ListItem style={style} key={index} dense divider={true}>
                 <ListItemText
                   primary={menu.items[`i_${index + 1}`].name}
                   secondary={`${menu.items[`i_${index + 1}`].price}원`}
                 />
                 <Checkbox
+                  checked={itemArr.some(ele => `i_${index + 1}` in ele)}
                   onChange={handleChange}
                   value="primary"
                   inputProps={{ "aria-label": "Item checkbox" }}
-                  id={`${index}`}
+                  id={`i_${index + 1}`}
                   checkedIcon={<CheckIcon />}
                 />
               </ListItem>
@@ -68,7 +120,9 @@ export default function AddToCart({ mode, menu }: Props): ReactElement {
           </FixedSizeList>
         )}
 
-        <Typography variant={"h6"}>완료</Typography>
+        <button onClick={handleComplete}>
+          <Typography variant={"h6"}>완료</Typography>
+        </button>
       </Paper>
     </Container>
   );
