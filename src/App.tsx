@@ -18,12 +18,18 @@ interface State {
   selectItem: {
     [itemKey: string]: { count: number; name: string; price: number };
   }[];
+  selectDiscount: { [discountKey: string]: { name: string; rate: number } }[];
 }
 
 export default class App extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { loading: true, menu: null, selectItem: [] };
+    this.state = {
+      loading: true,
+      menu: null,
+      selectItem: [],
+      selectDiscount: []
+    };
   }
 
   async componentDidMount() {
@@ -44,11 +50,10 @@ export default class App extends Component<Props, State> {
   }
 
   handleItemSelect = (
-    itemArr: {
-      [itemKey: string]: { count: number; name: string; price: number };
-    }[]
+    arr: State["selectItem"] | State["selectDiscount"],
+    arrName: string
   ) => {
-    this.setState({ ...this.state, selectItem: itemArr });
+    this.setState({ ...this.state, [arrName]: arr });
   };
 
   hadleItemEdit = (itemKey: string, count: number) => {
@@ -92,6 +97,7 @@ export default class App extends Component<Props, State> {
                 selectItem={this.state.selectItem}
                 hadleItemEdit={this.hadleItemEdit}
                 handleItemRemove={this.handleItemRemove}
+                selectDiscount={this.state.selectDiscount}
               />
             )}
           />
@@ -108,6 +114,7 @@ export default class App extends Component<Props, State> {
                 history={routeProps.history}
                 location={routeProps.location}
                 match={routeProps.match}
+                selectDiscount={this.state.selectDiscount}
               />
             )}
           />

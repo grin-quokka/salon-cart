@@ -21,60 +21,103 @@ interface Props {
     [itemKey: string]: { count: number; name: string; price: number };
   }[];
   handleItemSelect: (
-    itemArr: {
-      [itemKey: string]: { count: number; name: string; price: number };
-    }[]
+    arr:
+      | {
+          [itemKey: string]: { count: number; name: string; price: number };
+        }[]
+      | { [discountKey: string]: { name: string; rate: number } }[],
+    arrName: string
   ) => void;
   history: History<LocationState>;
   option: "items" | "discounts";
+  selectDiscount: { [discountKey: string]: { name: string; rate: number } }[];
 }
 
+// tslint:disable-next-line: max-func-body-length
 export default function CheckList({
   menu,
   selectItem,
   handleItemSelect,
   history,
-  option
+  option,
+  selectDiscount
 }: Props): ReactElement {
   const [itemArr, setItemArr] = useState([...selectItem]);
+  const [disCntArr, setDisCntArr] = useState([...selectDiscount]);
 
-  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (
+    { target }: React.ChangeEvent<HTMLInputElement>,
+    option: Props["option"]
+  ) => {
     if (target.checked && menu !== null) {
-      setItemArr([
-        ...itemArr,
-        {
-          [target.id]: {
-            count: 1,
-            name: menu.items[target.id].name,
-            price: menu.items[target.id].price
-          }
-        }
-      ]);
+      option === "items"
+        ? setItemArr([
+            ...itemArr,
+            {
+              [target.id]: {
+                count: 1,
+                name: menu.items[target.id].name,
+                price: menu.items[target.id].price
+              }
+            }
+          ])
+        : setDisCntArr([
+            ...disCntArr,
+            {
+              [target.id]: {
+                name: menu.discounts[target.id].name,
+                rate: menu.discounts[target.id].rate
+              }
+            }
+          ]);
     } else {
-      const temp = [...itemArr];
-      temp.some((ele, index) => {
-        if (target.id in ele) {
-          temp.splice(index, 1);
-          return true;
-        }
+      if (option === "items") {
+        const temp = [...itemArr];
+        temp.some((ele, index) => {
+          if (target.id in ele) {
+            temp.splice(index, 1);
+            return true;
+          }
 
-        return false;
-      });
-      setItemArr(temp);
+          return false;
+        });
+        setItemArr(temp);
+      } else {
+        const temp = [...disCntArr];
+        temp.some((ele, index) => {
+          if (target.id in ele) {
+            temp.splice(index, 1);
+            return true;
+          }
+
+          return false;
+        });
+        setDisCntArr(temp);
+      }
     }
   };
 
-  const handleComplete = () => {
-    const sorted = itemArr.sort((a, b) => {
-      if (Object.keys(a)[0].slice(2) > Object.keys(b)[0].slice(2)) {
+  const sortArrKey = (arr: Props["selectItem"] | Props["selectDiscount"]) => {
+    return arr.sort((a: any, b: any) => {
+      if (
+        Number(Object.keys(a)[0].slice(2)) > Number(Object.keys(b)[0].slice(2))
+      ) {
         return 1;
       }
-      if (Object.keys(a)[0].slice(2) < Object.keys(b)[0].slice(2)) {
+      if (
+        Number(Object.keys(a)[0].slice(2)) < Number(Object.keys(b)[0].slice(2))
+      ) {
         return -1;
       }
       return 0;
     });
-    handleItemSelect(itemArr);
+  };
+
+  const handleComplete = () => {
+    const sorted =
+      option === "items" ? sortArrKey(itemArr) : sortArrKey(disCntArr);
+    const arrName = option === "items" ? "selectItem" : "selectDiscount";
+    handleItemSelect(sorted, arrName);
     history.push("/");
   };
 
@@ -99,8 +142,12 @@ export default function CheckList({
               }
             />
             <Checkbox
-              checked={itemArr.some(ele => `i_${index + 1}` in ele)}
-              onChange={handleChange}
+              checked={
+                option === "items"
+                  ? itemArr.some(ele => `i_${index + 1}` in ele)
+                  : disCntArr.some(ele => `d_${index + 1}` in ele)
+              }
+              onChange={e => handleChange(e, option)}
               value="primary"
               inputProps={{ "aria-label": "Item checkbox" }}
               id={`${option[0]}_${index + 1}`}

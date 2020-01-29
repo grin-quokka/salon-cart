@@ -11,12 +11,14 @@ interface Props {
   }[];
   hadleItemEdit: (itemKey: string, count: number) => void;
   handleItemRemove: (itemKey: string) => void;
+  selectDiscount: { [discountKey: string]: { name: string; rate: number } }[];
 }
 
 export default function Cart({
   selectItem,
   hadleItemEdit,
-  handleItemRemove
+  handleItemRemove,
+  selectDiscount
 }: Props): ReactElement {
   return (
     <Container maxWidth="xs">
@@ -27,6 +29,7 @@ export default function Cart({
           selectItem={selectItem}
           hadleItemEdit={hadleItemEdit}
           handleItemRemove={handleItemRemove}
+          selectDiscount={selectDiscount}
         />
         <Sum calSum={183000} />
       </Paper>

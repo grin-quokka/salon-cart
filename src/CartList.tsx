@@ -14,12 +14,14 @@ interface Props {
   }[];
   hadleItemEdit: (itemKey: string, count: number) => void;
   handleItemRemove: (itemKey: string) => void;
+  selectDiscount: { [discountKey: string]: { name: string; rate: number } }[];
 }
 
 export default function CartList({
   selectItem,
   hadleItemEdit,
-  handleItemRemove
+  handleItemRemove,
+  selectDiscount
 }: Props): ReactElement {
   const numberSelect: number[] = [];
   for (let i = 1; i <= 10; i++) {
@@ -27,14 +29,9 @@ export default function CartList({
   }
 
   return (
-    <FixedSizeList
-      height={500}
-      width={"100%"}
-      itemSize={70}
-      itemCount={selectItem.length}
-    >
-      {({ index, style }) => (
-        <ListItem style={style} key={index} dense divider={true}>
+    <>
+      {selectItem.map((ele, index) => (
+        <ListItem key={index} dense divider={true}>
           <ListItemText
             primary={`${Object.values(selectItem[index])[0].name}`}
             secondary={`${Object.values(selectItem[index])[0].price}원`}
@@ -63,7 +60,15 @@ export default function CartList({
             onClick={() => handleItemRemove(Object.keys(selectItem[index])[0])}
           />
         </ListItem>
-      )}
-    </FixedSizeList>
+      ))}
+      {selectDiscount.map((ele, index) => (
+        <ListItem key={index} dense divider={true}>
+          <ListItemText
+            primary={`${Object.values(ele)[0].name}`}
+            secondary={`${(Object.values(ele)[0].rate * 100).toFixed()}%`}
+          />
+        </ListItem>
+      ))}
+    </>
   );
 }
