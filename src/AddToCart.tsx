@@ -70,17 +70,16 @@ export default function AddToCart({
   };
 
   const handleComplete = () => {
-    // const sorted = itemArr.sort((a, b) => {
-    //   if (Object.keys(a)[0].slice(2) > Object.keys(b)[0].slice(2)) {
-    //     return 1;
-    //   }
-    //   if (Object.keys(a)[0].slice(2) < Object.keys(b)[0].slice(2)) {
-    //     return -1;
-    //   }
-    //   // a must be equal to b
-    //   return 0;
-    // });
-    // console.log(sorted);
+    const sorted = itemArr.sort((a, b) => {
+      if (Object.keys(a)[0].slice(2) > Object.keys(b)[0].slice(2)) {
+        return 1;
+      }
+      if (Object.keys(a)[0].slice(2) < Object.keys(b)[0].slice(2)) {
+        return -1;
+      }
+      // a must be equal to b
+      return 0;
+    });
     handleItemSelect(itemArr);
     history.push("/");
   };
