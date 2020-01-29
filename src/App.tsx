@@ -97,21 +97,21 @@ export default class App extends Component<Props, State> {
           />
           (
           <Route
-            path="/addtocart/item"
+            path="/addtocart/:mode"
             exact
             // tslint:disable-next-line: react-this-binding-issue
-            render={(routeProps: RouteComponentProps) => (
+            render={(routeProps: RouteComponentProps<{ mode: string }>) => (
               <AddToCart
                 menu={this.state.menu}
-                mode={"item"}
                 selectItem={this.state.selectItem}
                 handleItemSelect={this.handleItemSelect}
                 history={routeProps.history}
+                location={routeProps.location}
+                match={routeProps.match}
               />
             )}
           />
           )
-          <Route path="/addtocart/discount" exact component={AddToCart} />
           <Redirect path="*" to="/" />
         </Switch>
       </BrowserRouter>

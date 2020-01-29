@@ -1,28 +1,22 @@
 import React, { ReactElement, useState } from "react";
+import { FixedSizeList } from "react-window";
 import {
-  Container,
-  Paper,
-  Toolbar,
-  Typography,
   ListItem,
   ListItemText,
-  Divider,
-  Checkbox
+  Checkbox,
+  Typography
 } from "@material-ui/core";
-import { FixedSizeList } from "react-window";
 import CheckIcon from "@material-ui/icons/Check";
 import { History, LocationState } from "history";
-import { RouteComponentProps } from "react-router";
-import CheckList from "./CheckList";
 
-interface Props extends RouteComponentProps<{ mode: string }> {
+interface Props {
   menu: {
     items: {
       [itemKey: string]: { count: number; name: string; price: number };
     };
     discounts: { [discountKey: string]: { name: string; rate: number } };
     currency_code: "string";
-  } | null;
+  };
   selectItem: {
     [itemKey: string]: { count: number; name: string; price: number };
   }[];
@@ -32,21 +26,17 @@ interface Props extends RouteComponentProps<{ mode: string }> {
     }[]
   ) => void;
   history: History<LocationState>;
+  option: "items" | "discounts";
 }
 
-// tslint:disable-next-line: max-func-body-length
-export default function AddToCart({
+export default function CheckList({
   menu,
   selectItem,
   handleItemSelect,
   history,
-  location,
-  match: {
-    params: { mode }
-  }
+  option
 }: Props): ReactElement {
   const [itemArr, setItemArr] = useState([...selectItem]);
-  // const [discntArr, setDiscntArr] = useState([...discntArr]);
 
   const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
     if (target.checked && menu !== null) {
@@ -89,34 +79,40 @@ export default function AddToCart({
   };
 
   return (
-    <Container maxWidth="xs">
-      <Paper elevation={3}>
-        <Toolbar>
-          <Typography variant="h6">
-            {mode === "items" ? "시술 메뉴" : "할인"}
-          </Typography>
-        </Toolbar>
-        <Divider light />
-        {menu !== null && mode === "items" && (
-          <CheckList
-            option={"items"}
-            menu={menu}
-            selectItem={selectItem}
-            handleItemSelect={handleItemSelect}
-            history={history}
-          />
+    <>
+      <FixedSizeList
+        height={500}
+        width={"100%"}
+        itemSize={70}
+        itemCount={Object.keys(menu[option]).length}
+      >
+        {({ index, style }) => (
+          <ListItem style={style} key={index} dense divider={true}>
+            <ListItemText
+              primary={menu[option][`${option[0]}_${index + 1}`].name}
+              secondary={
+                option === "items"
+                  ? `${menu[option][`i_${index + 1}`].price}원`
+                  : `${(
+                      menu.discounts[`d_${index + 1}`].rate * 100
+                    ).toFixed()}%`
+              }
+            />
+            <Checkbox
+              checked={itemArr.some(ele => `i_${index + 1}` in ele)}
+              onChange={handleChange}
+              value="primary"
+              inputProps={{ "aria-label": "Item checkbox" }}
+              id={`${option[0]}_${index + 1}`}
+              checkedIcon={<CheckIcon />}
+            />
+          </ListItem>
         )}
+      </FixedSizeList>
 
-        {menu !== null && mode === "discounts" && (
-          <CheckList
-            option={"discounts"}
-            menu={menu}
-            selectItem={selectItem}
-            handleItemSelect={handleItemSelect}
-            history={history}
-          />
-        )}
-      </Paper>
-    </Container>
+      <button onClick={handleComplete}>
+        <Typography variant={"h6"}>완료</Typography>
+      </button>
+    </>
   );
 }
