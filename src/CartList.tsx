@@ -7,21 +7,17 @@ import {
   Select,
   MenuItem
 } from "@material-ui/core";
-
 interface Props {
   selectItem: {
     [itemKey: string]: { count: number; name: string; price: number };
   }[];
-  menu: {
-    items: {
-      [itemKey: string]: { count: number; name: string; price: number };
-    };
-    discounts: { [discountKey: string]: { name: string; rate: number } };
-    currency_code: "string";
-  };
+  hadleItemEdit: (itemKey: string, count: number) => void;
 }
 
-export default function CartList({ selectItem, menu }: Props): ReactElement {
+export default function CartList({
+  selectItem,
+  hadleItemEdit
+}: Props): ReactElement {
   const numberSelect: number[] = [];
   for (let i = 1; i <= 10; i++) {
     numberSelect.push(i);
@@ -43,7 +39,14 @@ export default function CartList({ selectItem, menu }: Props): ReactElement {
           <FormControl>
             <Select
               value={Object.values(selectItem[index])[0].count}
-              // TODO: onClose={handleChange}
+              onChange={(
+                event: React.ChangeEvent<{ name?: string; value: unknown }>
+              ) => {
+                hadleItemEdit(
+                  Object.keys(selectItem[index])[0],
+                  Number(event.target.value)
+                );
+              }}
             >
               <MenuItem value="" disabled>
                 {`${Object.values(selectItem[index])[0].name}`}

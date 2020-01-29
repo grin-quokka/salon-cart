@@ -51,6 +51,19 @@ export default class App extends Component<Props, State> {
     this.setState({ ...this.state, selectItem: itemArr });
   };
 
+  hadleItemEdit = (itemKey: string, count: number) => {
+    const temp = [...this.state.selectItem];
+    temp.some((ele, index) => {
+      if (itemKey in ele) {
+        temp[index][itemKey].count = count;
+        return true;
+      }
+
+      return false;
+    });
+    this.setState({ ...this.state, selectItem: temp });
+  };
+
   render() {
     return this.state.loading ? (
       <div>로딩중</div>
@@ -61,7 +74,10 @@ export default class App extends Component<Props, State> {
             path="/"
             exact
             component={() => (
-              <Cart selectItem={this.state.selectItem} menu={this.state.menu} />
+              <Cart
+                selectItem={this.state.selectItem}
+                hadleItemEdit={this.hadleItemEdit}
+              />
             )}
           />
           (

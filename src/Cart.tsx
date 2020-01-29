@@ -9,23 +9,19 @@ interface Props {
   selectItem: {
     [itemKey: string]: { count: number; name: string; price: number };
   }[];
-  menu: {
-    items: {
-      [itemKey: string]: { count: number; name: string; price: number };
-    };
-    discounts: { [discountKey: string]: { name: string; rate: number } };
-    currency_code: "string";
-  } | null;
+  hadleItemEdit: (itemKey: string, count: number) => void;
 }
 
-export default function Cart({ selectItem, menu }: Props): ReactElement {
+export default function Cart({
+  selectItem,
+  hadleItemEdit
+}: Props): ReactElement {
   return (
     <Container maxWidth="xs">
       <Paper elevation={3}>
         <CartHeader customerName={"조아라"} />
         <AddBtnGroup />
-        {menu !== null && <CartList selectItem={selectItem} menu={menu} />}
-
+        <CartList selectItem={selectItem} hadleItemEdit={hadleItemEdit} />
         <Sum calSum={183000} />
       </Paper>
     </Container>
