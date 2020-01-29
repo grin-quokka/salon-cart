@@ -7,16 +7,19 @@ import {
   Select,
   MenuItem
 } from "@material-ui/core";
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 interface Props {
   selectItem: {
     [itemKey: string]: { count: number; name: string; price: number };
   }[];
   hadleItemEdit: (itemKey: string, count: number) => void;
+  handleItemRemove: (itemKey: string) => void;
 }
 
 export default function CartList({
   selectItem,
-  hadleItemEdit
+  hadleItemEdit,
+  handleItemRemove
 }: Props): ReactElement {
   const numberSelect: number[] = [];
   for (let i = 1; i <= 10; i++) {
@@ -56,6 +59,9 @@ export default function CartList({
               ))}
             </Select>
           </FormControl>
+          <HighlightOffIcon
+            onClick={() => handleItemRemove(Object.keys(selectItem[index])[0])}
+          />
         </ListItem>
       )}
     </FixedSizeList>

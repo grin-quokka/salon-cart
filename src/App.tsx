@@ -64,6 +64,19 @@ export default class App extends Component<Props, State> {
     this.setState({ ...this.state, selectItem: temp });
   };
 
+  handleItemRemove = (itemKey: string) => {
+    const temp = [...this.state.selectItem];
+    temp.some((ele, index) => {
+      if (itemKey in ele) {
+        temp.splice(index, 1);
+        return true;
+      }
+
+      return false;
+    });
+    this.setState({ ...this.state, selectItem: temp });
+  };
+
   render() {
     return this.state.loading ? (
       <div>로딩중</div>
@@ -73,10 +86,12 @@ export default class App extends Component<Props, State> {
           <Route
             path="/"
             exact
+            // tslint:disable-next-line: react-this-binding-issue
             component={() => (
               <Cart
                 selectItem={this.state.selectItem}
                 hadleItemEdit={this.hadleItemEdit}
+                handleItemRemove={this.handleItemRemove}
               />
             )}
           />
