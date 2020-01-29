@@ -63,8 +63,6 @@ export default function AddToCart({
 
         return false;
       });
-
-      // temp.splice(Object.keys(temp).indexOf(target.id), 1);
       setItemArr(temp);
     }
   };
@@ -77,7 +75,6 @@ export default function AddToCart({
       if (Object.keys(a)[0].slice(2) < Object.keys(b)[0].slice(2)) {
         return -1;
       }
-      // a must be equal to b
       return 0;
     });
     handleItemSelect(itemArr);
