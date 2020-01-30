@@ -26,6 +26,29 @@ interface Props {
   handleDisRemove: (disKey: string) => void;
 }
 
+export const findItem = (iKey: string, selectItem: Props["selectItem"]) => {
+  let itemObj = { count: 0, name: "", price: 0 };
+  selectItem.some(ele => {
+    itemObj = Object.values(ele)[0];
+    return Object.keys(ele)[0] === iKey;
+  });
+
+  return itemObj;
+};
+
+export const calDiscounts = (
+  rate: number,
+  dicountsItems: string[],
+  selectItem: Props["selectItem"]
+) => {
+  let sum = 0;
+  dicountsItems.forEach(ele => {
+    sum +=
+      findItem(ele, selectItem).count * findItem(ele, selectItem).price * rate;
+  });
+  return sum;
+};
+
 // tslint:disable-next-line: max-func-body-length
 export default function CartList({
   selectItem,
@@ -39,27 +62,6 @@ export default function CartList({
   for (let i = 1; i <= 10; i++) {
     numberSelect.push(i);
   }
-
-  const findItem = (iKey: string, selectItem: Props["selectItem"]) => {
-    let itemObj = { count: 0, name: "", price: 0 };
-    selectItem.some(ele => {
-      itemObj = Object.values(ele)[0];
-      return Object.keys(ele)[0] === iKey;
-    });
-
-    return itemObj;
-  };
-
-  const calDiscounts = (rate: number, dicountsItems: string[]) => {
-    let sum = 0;
-    dicountsItems.forEach((ele, index) => {
-      sum +=
-        findItem(ele, selectItem).count *
-        findItem(ele, selectItem).price *
-        rate;
-    });
-    return sum;
-  };
 
   return (
     <>
@@ -112,7 +114,8 @@ export default function CartList({
                   .join(" , ")}`}
                 <Typography color="primary">{`-${calDiscounts(
                   Object.values(ele)[0].rate,
-                  Object.values(ele)[0].items
+                  Object.values(ele)[0].items,
+                  selectItem
                 )}원(${(
                   Object.values(ele)[0].rate * 100
                 ).toFixed()}%)`}</Typography>

@@ -150,6 +150,7 @@ export default class App extends Component<Props, State> {
                 selectDiscount={this.state.selectDiscount}
                 handleDisEdit={this.handleDisEdit}
                 handleDisRemove={this.handleDisRemove}
+                currency={this.state.menu?.currency_code}
               />
             )}
           />

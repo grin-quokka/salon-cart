@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import { Container, Paper } from "@material-ui/core";
 import CartHeader from "./CartHeader";
 import AddBtnGroup from "./AddBtnGroup";
-import CartList from "./CartList";
+import CartList, { calDiscounts } from "./CartList";
 import Sum from "./Sum";
 
 interface Props {
@@ -19,6 +19,7 @@ interface Props {
     discountsObj: { name: string; rate: number; items: string[] }
   ) => void;
   handleDisRemove: (disKey: string) => void;
+  currency: string | undefined;
 }
 
 export default function Cart({
@@ -27,8 +28,25 @@ export default function Cart({
   handleItemRemove,
   selectDiscount,
   handleDisEdit,
-  handleDisRemove
+  handleDisRemove,
+  currency
 }: Props): ReactElement {
+  const calSum = () => {
+    let sum = 0;
+    selectItem.forEach(ele => {
+      sum += Object.values(ele)[0].count * Object.values(ele)[0].price;
+    });
+    selectDiscount.forEach(ele => {
+      sum -= calDiscounts(
+        Object.values(ele)[0].rate,
+        Object.values(ele)[0].items,
+        selectItem
+      );
+    });
+
+    return sum;
+  };
+
   return (
     <Container maxWidth="xs">
       <Paper elevation={3}>
@@ -42,7 +60,7 @@ export default function Cart({
           handleDisEdit={handleDisEdit}
           handleDisRemove={handleDisRemove}
         />
-        <Sum calSum={183000} />
+        <Sum calSum={calSum()} currency={currency} />
       </Paper>
     </Container>
   );
