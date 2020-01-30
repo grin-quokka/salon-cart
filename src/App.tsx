@@ -81,7 +81,18 @@ export default class App extends Component<Props, State> {
 
       return false;
     });
-    this.setState({ ...this.state, selectItem: temp });
+
+    const tempDis = [...this.state.selectDiscount];
+    tempDis.some((ele, index) => {
+      const { items } = Object.values(ele)[0];
+      if (items.includes(itemKey)) {
+        items.splice(items.indexOf(itemKey), 1);
+        return true;
+      }
+      return false;
+    });
+
+    this.setState({ ...this.state, selectItem: temp, selectDiscount: tempDis });
   };
 
   render() {
