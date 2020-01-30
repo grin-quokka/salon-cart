@@ -18,7 +18,9 @@ interface State {
   selectItem: {
     [itemKey: string]: { count: number; name: string; price: number };
   }[];
-  selectDiscount: { [discountKey: string]: { name: string; rate: number } }[];
+  selectDiscount: {
+    [discountKey: string]: { name: string; rate: number; items: string[] };
+  }[];
 }
 
 export default class App extends Component<Props, State> {
@@ -53,7 +55,7 @@ export default class App extends Component<Props, State> {
     arr: State["selectItem"] | State["selectDiscount"],
     arrName: string
   ) => {
-    this.setState({ ...this.state, [arrName]: arr });
+    this.setState({ ...this.state, [arrName]: [...arr] });
   };
 
   hadleItemEdit = (itemKey: string, count: number) => {
@@ -98,6 +100,7 @@ export default class App extends Component<Props, State> {
                 hadleItemEdit={this.hadleItemEdit}
                 handleItemRemove={this.handleItemRemove}
                 selectDiscount={this.state.selectDiscount}
+                menu={this.state.menu}
               />
             )}
           />

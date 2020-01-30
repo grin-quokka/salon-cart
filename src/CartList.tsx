@@ -5,7 +5,8 @@ import {
   ListItemText,
   FormControl,
   Select,
-  MenuItem
+  MenuItem,
+  Typography
 } from "@material-ui/core";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 interface Props {
@@ -14,19 +15,50 @@ interface Props {
   }[];
   hadleItemEdit: (itemKey: string, count: number) => void;
   handleItemRemove: (itemKey: string) => void;
-  selectDiscount: { [discountKey: string]: { name: string; rate: number } }[];
+  selectDiscount: {
+    [discountKey: string]: { name: string; rate: number; items: string[] };
+  }[];
+  menu: {
+    items: {
+      [itemKey: string]: { count: number; name: string; price: number };
+    };
+    discounts: { [discountKey: string]: { name: string; rate: number } };
+    currency_code: "string";
+  } | null;
 }
 
 export default function CartList({
   selectItem,
   hadleItemEdit,
   handleItemRemove,
-  selectDiscount
+  selectDiscount,
+  menu
 }: Props): ReactElement {
   const numberSelect: number[] = [];
   for (let i = 1; i <= 10; i++) {
     numberSelect.push(i);
   }
+
+  const findItem = (iKey: string, selectItem: Props["selectItem"]) => {
+    let itemObj = { count: 0, name: "", price: 0 };
+    selectItem.some(ele => {
+      itemObj = Object.values(ele)[0];
+      return Object.keys(ele)[0] === iKey;
+    });
+
+    return itemObj;
+  };
+
+  const calDiscounts = (rate: number, dicountsItems: string[]) => {
+    let sum = 0;
+    dicountsItems.forEach((ele, index) => {
+      sum +=
+        findItem(ele, selectItem).count *
+        findItem(ele, selectItem).price *
+        rate;
+    });
+    return sum;
+  };
 
   return (
     <>
@@ -62,10 +94,29 @@ export default function CartList({
         </ListItem>
       ))}
       {selectDiscount.map((ele, index) => (
-        <ListItem key={index} dense divider={true}>
+        <ListItem key={index} dense divider={true} alignItems="flex-start">
           <ListItemText
             primary={`${Object.values(ele)[0].name}`}
-            secondary={`${(Object.values(ele)[0].rate * 100).toFixed()}%`}
+            secondary={
+              <>
+                {`${Object.values(ele)[0]
+                  .items.map(
+                    iKey =>
+                      `${menu?.items[iKey].name} ${
+                        findItem(iKey, selectItem).count === 1
+                          ? ""
+                          : `x ${findItem(iKey, selectItem).count}`
+                      }`
+                  )
+                  .join(" , ")}`}
+                <Typography color="primary">{`-${calDiscounts(
+                  Object.values(ele)[0].rate,
+                  Object.values(ele)[0].items
+                )}원(${(
+                  Object.values(ele)[0].rate * 100
+                ).toFixed()}%)`}</Typography>
+              </>
+            }
           />
         </ListItem>
       ))}

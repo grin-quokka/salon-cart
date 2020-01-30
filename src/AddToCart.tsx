@@ -26,11 +26,19 @@ interface Props extends RouteComponentProps<{ mode: string }> {
       | {
           [itemKey: string]: { count: number; name: string; price: number };
         }[]
-      | { [discountKey: string]: { name: string; rate: number } }[],
+      | {
+          [discountKey: string]: {
+            name: string;
+            rate: number;
+            items: string[];
+          };
+        }[],
     arrName: string
   ) => void;
   history: History<LocationState>;
-  selectDiscount: { [discountKey: string]: { name: string; rate: number } }[];
+  selectDiscount: {
+    [discountKey: string]: { name: string; rate: number; items: string[] };
+  }[];
 }
 
 // tslint:disable-next-line: max-func-body-length

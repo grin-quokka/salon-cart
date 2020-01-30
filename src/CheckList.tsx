@@ -25,12 +25,20 @@ interface Props {
       | {
           [itemKey: string]: { count: number; name: string; price: number };
         }[]
-      | { [discountKey: string]: { name: string; rate: number } }[],
+      | {
+          [discountKey: string]: {
+            name: string;
+            rate: number;
+            items: string[];
+          };
+        }[],
     arrName: string
   ) => void;
   history: History<LocationState>;
   option: "items" | "discounts";
-  selectDiscount: { [discountKey: string]: { name: string; rate: number } }[];
+  selectDiscount: {
+    [discountKey: string]: { name: string; rate: number; items: string[] };
+  }[];
 }
 
 // tslint:disable-next-line: max-func-body-length
@@ -66,7 +74,8 @@ export default function CheckList({
             {
               [target.id]: {
                 name: menu.discounts[target.id].name,
-                rate: menu.discounts[target.id].rate
+                rate: menu.discounts[target.id].rate,
+                items: itemArr.map(ele => Object.keys(ele)[0])
               }
             }
           ]);
