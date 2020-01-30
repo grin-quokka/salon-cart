@@ -83,16 +83,35 @@ export default class App extends Component<Props, State> {
     });
 
     const tempDis = [...this.state.selectDiscount];
-    tempDis.some((ele, index) => {
+    tempDis.forEach(ele => {
       const { items } = Object.values(ele)[0];
       if (items.includes(itemKey)) {
         items.splice(items.indexOf(itemKey), 1);
-        return true;
       }
-      return false;
     });
 
     this.setState({ ...this.state, selectItem: temp, selectDiscount: tempDis });
+  };
+
+  handleDisEdit = (
+    disKey: string,
+    discountsObj: { name: string; rate: number; items: string[] }
+  ) => {
+    const discountArr = [...this.state.selectDiscount];
+
+    discountArr.some((ele, index) => {
+      if (Object.keys(ele)[0] === disKey) {
+        discountArr.splice(index, 1, { [disKey]: discountsObj });
+        return true;
+      }
+
+      return false;
+    });
+
+    this.setState({
+      ...this.state,
+      selectDiscount: discountArr
+    });
   };
 
   render() {
@@ -111,7 +130,7 @@ export default class App extends Component<Props, State> {
                 hadleItemEdit={this.hadleItemEdit}
                 handleItemRemove={this.handleItemRemove}
                 selectDiscount={this.state.selectDiscount}
-                menu={this.state.menu}
+                handleDisEdit={this.handleDisEdit}
               />
             )}
           />

@@ -14,13 +14,10 @@ interface Props {
   selectDiscount: {
     [discountKey: string]: { name: string; rate: number; items: string[] };
   }[];
-  menu: {
-    items: {
-      [itemKey: string]: { count: number; name: string; price: number };
-    };
-    discounts: { [discountKey: string]: { name: string; rate: number } };
-    currency_code: "string";
-  } | null;
+  handleDisEdit: (
+    disKey: string,
+    discountsObj: { name: string; rate: number; items: string[] }
+  ) => void;
 }
 
 export default function Cart({
@@ -28,7 +25,7 @@ export default function Cart({
   hadleItemEdit,
   handleItemRemove,
   selectDiscount,
-  menu
+  handleDisEdit
 }: Props): ReactElement {
   return (
     <Container maxWidth="xs">
@@ -40,7 +37,7 @@ export default function Cart({
           hadleItemEdit={hadleItemEdit}
           handleItemRemove={handleItemRemove}
           selectDiscount={selectDiscount}
-          menu={menu}
+          handleDisEdit={handleDisEdit}
         />
         <Sum calSum={183000} />
       </Paper>

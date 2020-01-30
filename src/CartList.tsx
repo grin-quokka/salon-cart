@@ -9,6 +9,7 @@ import {
   Typography
 } from "@material-ui/core";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import DiscountDialog from "./DiscountDialog";
 interface Props {
   selectItem: {
     [itemKey: string]: { count: number; name: string; price: number };
@@ -18,21 +19,19 @@ interface Props {
   selectDiscount: {
     [discountKey: string]: { name: string; rate: number; items: string[] };
   }[];
-  menu: {
-    items: {
-      [itemKey: string]: { count: number; name: string; price: number };
-    };
-    discounts: { [discountKey: string]: { name: string; rate: number } };
-    currency_code: "string";
-  } | null;
+  handleDisEdit: (
+    disKey: string,
+    discountsObj: { name: string; rate: number; items: string[] }
+  ) => void;
 }
 
+// tslint:disable-next-line: max-func-body-length
 export default function CartList({
   selectItem,
   hadleItemEdit,
   handleItemRemove,
   selectDiscount,
-  menu
+  handleDisEdit
 }: Props): ReactElement {
   const numberSelect: number[] = [];
   for (let i = 1; i <= 10; i++) {
@@ -94,15 +93,15 @@ export default function CartList({
         </ListItem>
       ))}
       {selectDiscount.map((ele, index) => (
-        <ListItem key={index} dense divider={true} alignItems="flex-start">
+        <ListItem key={index} dense divider={true}>
           <ListItemText
             primary={`${Object.values(ele)[0].name}`}
             secondary={
-              <>
+              <React.Fragment>
                 {`${Object.values(ele)[0]
                   .items.map(
                     iKey =>
-                      `${menu?.items[iKey].name} ${
+                      `${findItem(iKey, selectItem).name} ${
                         findItem(iKey, selectItem).count === 1
                           ? ""
                           : `x ${findItem(iKey, selectItem).count}`
@@ -115,8 +114,15 @@ export default function CartList({
                 )}원(${(
                   Object.values(ele)[0].rate * 100
                 ).toFixed()}%)`}</Typography>
-              </>
+              </React.Fragment>
             }
+          />
+
+          <DiscountDialog
+            singleDiscount={Object.values(ele)[0]}
+            selectItem={selectItem}
+            disKey={Object.keys(ele)[0]}
+            handleDisEdit={handleDisEdit}
           />
         </ListItem>
       ))}
