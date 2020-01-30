@@ -18,6 +18,7 @@ interface Props {
     disKey: string,
     discountsObj: { name: string; rate: number; items: string[] }
   ) => void;
+  handleDisRemove: (disKey: string) => void;
 }
 
 export default function Cart({
@@ -25,7 +26,8 @@ export default function Cart({
   hadleItemEdit,
   handleItemRemove,
   selectDiscount,
-  handleDisEdit
+  handleDisEdit,
+  handleDisRemove
 }: Props): ReactElement {
   return (
     <Container maxWidth="xs">
@@ -38,6 +40,7 @@ export default function Cart({
           handleItemRemove={handleItemRemove}
           selectDiscount={selectDiscount}
           handleDisEdit={handleDisEdit}
+          handleDisRemove={handleDisRemove}
         />
         <Sum calSum={183000} />
       </Paper>

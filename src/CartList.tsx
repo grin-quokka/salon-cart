@@ -23,6 +23,7 @@ interface Props {
     disKey: string,
     discountsObj: { name: string; rate: number; items: string[] }
   ) => void;
+  handleDisRemove: (disKey: string) => void;
 }
 
 // tslint:disable-next-line: max-func-body-length
@@ -31,7 +32,8 @@ export default function CartList({
   hadleItemEdit,
   handleItemRemove,
   selectDiscount,
-  handleDisEdit
+  handleDisEdit,
+  handleDisRemove
 }: Props): ReactElement {
   const numberSelect: number[] = [];
   for (let i = 1; i <= 10; i++) {
@@ -123,6 +125,7 @@ export default function CartList({
             selectItem={selectItem}
             disKey={Object.keys(ele)[0]}
             handleDisEdit={handleDisEdit}
+            handleDisRemove={handleDisRemove}
           />
         </ListItem>
       ))}

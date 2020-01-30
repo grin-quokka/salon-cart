@@ -24,13 +24,15 @@ interface Props {
     disKey: string,
     discountsObj: { name: string; rate: number; items: string[] }
   ) => void;
+  handleDisRemove: (disKey: string) => void;
 }
 
 export default function DiscountDialog({
   singleDiscount,
   selectItem,
   disKey,
-  handleDisEdit
+  handleDisEdit,
+  handleDisRemove
 }: Props): ReactElement {
   const [open, setOpen] = React.useState(false);
 
@@ -99,6 +101,9 @@ export default function DiscountDialog({
               />
             </ListItem>
           ))}
+          <ListItem button onClick={() => handleDisRemove(disKey)}>
+            <ListItemText primary="할인 삭제" color="primary" />
+          </ListItem>
         </List>
       </Dialog>
     </React.Fragment>

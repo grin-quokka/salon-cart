@@ -114,6 +114,24 @@ export default class App extends Component<Props, State> {
     });
   };
 
+  handleDisRemove = (disKey: string) => {
+    const discountArr = [...this.state.selectDiscount];
+
+    discountArr.some((ele, index) => {
+      if (Object.keys(ele)[0] === disKey) {
+        discountArr.splice(index, 1);
+        return true;
+      }
+
+      return false;
+    });
+
+    this.setState({
+      ...this.state,
+      selectDiscount: discountArr
+    });
+  };
+
   render() {
     return this.state.loading ? (
       <div>로딩중</div>
@@ -131,6 +149,7 @@ export default class App extends Component<Props, State> {
                 handleItemRemove={this.handleItemRemove}
                 selectDiscount={this.state.selectDiscount}
                 handleDisEdit={this.handleDisEdit}
+                handleDisRemove={this.handleDisRemove}
               />
             )}
           />
