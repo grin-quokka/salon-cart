@@ -18,12 +18,20 @@ interface State {
   selectItem: {
     [itemKey: string]: { count: number; name: string; price: number };
   }[];
+  selectDiscount: {
+    [discountKey: string]: { name: string; rate: number; items: string[] };
+  }[];
 }
 
 export default class App extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { loading: true, menu: null, selectItem: [] };
+    this.state = {
+      loading: true,
+      menu: null,
+      selectItem: [],
+      selectDiscount: []
+    };
   }
 
   async componentDidMount() {
@@ -44,11 +52,10 @@ export default class App extends Component<Props, State> {
   }
 
   handleItemSelect = (
-    itemArr: {
-      [itemKey: string]: { count: number; name: string; price: number };
-    }[]
+    arr: State["selectItem"] | State["selectDiscount"],
+    arrName: string
   ) => {
-    this.setState({ ...this.state, selectItem: itemArr });
+    this.setState({ ...this.state, [arrName]: [...arr] });
   };
 
   hadleItemEdit = (itemKey: string, count: number) => {
@@ -74,7 +81,55 @@ export default class App extends Component<Props, State> {
 
       return false;
     });
-    this.setState({ ...this.state, selectItem: temp });
+
+    const tempDis = [...this.state.selectDiscount];
+    tempDis.forEach(ele => {
+      const { items } = Object.values(ele)[0];
+      if (items.includes(itemKey)) {
+        items.splice(items.indexOf(itemKey), 1);
+      }
+    });
+
+    this.setState({ ...this.state, selectItem: temp, selectDiscount: tempDis });
+  };
+
+  handleDisEdit = (
+    disKey: string,
+    discountsObj: { name: string; rate: number; items: string[] }
+  ) => {
+    const discountArr = [...this.state.selectDiscount];
+
+    discountArr.some((ele, index) => {
+      if (Object.keys(ele)[0] === disKey) {
+        discountArr.splice(index, 1, { [disKey]: discountsObj });
+        return true;
+      }
+
+      return false;
+    });
+
+    this.setState({
+      ...this.state,
+      selectDiscount: discountArr
+    });
+  };
+
+  handleDisRemove = (disKey: string) => {
+    const discountArr = [...this.state.selectDiscount];
+
+    discountArr.some((ele, index) => {
+      if (Object.keys(ele)[0] === disKey) {
+        discountArr.splice(index, 1);
+        return true;
+      }
+
+      return false;
+    });
+
+    this.setState({
+      ...this.state,
+      selectDiscount: discountArr
+    });
   };
 
   render() {
@@ -92,26 +147,31 @@ export default class App extends Component<Props, State> {
                 selectItem={this.state.selectItem}
                 hadleItemEdit={this.hadleItemEdit}
                 handleItemRemove={this.handleItemRemove}
+                selectDiscount={this.state.selectDiscount}
+                handleDisEdit={this.handleDisEdit}
+                handleDisRemove={this.handleDisRemove}
+                currency={this.state.menu?.currency_code}
               />
             )}
           />
           (
           <Route
-            path="/addtocart/item"
+            path="/addtocart/:mode"
             exact
             // tslint:disable-next-line: react-this-binding-issue
-            render={(routeProps: RouteComponentProps) => (
+            render={(routeProps: RouteComponentProps<{ mode: string }>) => (
               <AddToCart
                 menu={this.state.menu}
-                mode={"item"}
                 selectItem={this.state.selectItem}
                 handleItemSelect={this.handleItemSelect}
                 history={routeProps.history}
+                location={routeProps.location}
+                match={routeProps.match}
+                selectDiscount={this.state.selectDiscount}
               />
             )}
           />
           )
-          <Route path="/addtocart/discount" exact component={AddToCart} />
           <Redirect path="*" to="/" />
         </Switch>
       </BrowserRouter>

@@ -8,13 +8,13 @@ interface Props {}
 export default function AddBtnGroup({}: Props): ReactElement {
   return (
     <div style={{ display: "inline" }}>
-      <Link to={"/addtocart/item"}>
+      <Link to={"/addtocart/items"}>
         <Button variant="outlined" color="primary">
           <AddIcon />
           시술
         </Button>
       </Link>
-      <Link to={"/addtocart/discount"}>
+      <Link to={"/addtocart/discounts"}>
         <Button variant="outlined" color="secondary">
           <AddIcon /> 할인
         </Button>

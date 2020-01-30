@@ -1,19 +1,16 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement } from "react";
 import {
   Container,
   Paper,
   Toolbar,
   Typography,
-  ListItem,
-  ListItemText,
-  Divider,
-  Checkbox
+  Divider
 } from "@material-ui/core";
-import { FixedSizeList } from "react-window";
-import CheckIcon from "@material-ui/icons/Check";
 import { History, LocationState } from "history";
-interface Props {
-  mode: string;
+import { RouteComponentProps } from "react-router";
+import CheckList from "./CheckList";
+
+interface Props extends RouteComponentProps<{ mode: string }> {
   menu: {
     items: {
       [itemKey: string]: { count: number; name: string; price: number };
@@ -25,100 +22,67 @@ interface Props {
     [itemKey: string]: { count: number; name: string; price: number };
   }[];
   handleItemSelect: (
-    itemArr: {
-      [itemKey: string]: { count: number; name: string; price: number };
-    }[]
+    arr:
+      | {
+          [itemKey: string]: { count: number; name: string; price: number };
+        }[]
+      | {
+          [discountKey: string]: {
+            name: string;
+            rate: number;
+            items: string[];
+          };
+        }[],
+    arrName: string
   ) => void;
   history: History<LocationState>;
+  selectDiscount: {
+    [discountKey: string]: { name: string; rate: number; items: string[] };
+  }[];
 }
 
+// tslint:disable-next-line: max-func-body-length
 export default function AddToCart({
-  mode,
   menu,
   selectItem,
   handleItemSelect,
-  history
+  history,
+  location,
+  match: {
+    params: { mode }
+  },
+  selectDiscount
 }: Props): ReactElement {
-  const [itemArr, setItemArr] = useState([...selectItem]);
-
-  const handleChange = ({ target }: React.ChangeEvent<HTMLInputElement>) => {
-    if (target.checked && menu !== null) {
-      setItemArr([
-        ...itemArr,
-        {
-          [target.id]: {
-            count: 1,
-            name: menu.items[target.id].name,
-            price: menu.items[target.id].price
-          }
-        }
-      ]);
-    } else {
-      const temp = [...itemArr];
-      temp.some((ele, index) => {
-        if (target.id in ele) {
-          temp.splice(index, 1);
-          return true;
-        }
-
-        return false;
-      });
-      setItemArr(temp);
-    }
-  };
-
-  const handleComplete = () => {
-    const sorted = itemArr.sort((a, b) => {
-      if (Object.keys(a)[0].slice(2) > Object.keys(b)[0].slice(2)) {
-        return 1;
-      }
-      if (Object.keys(a)[0].slice(2) < Object.keys(b)[0].slice(2)) {
-        return -1;
-      }
-      return 0;
-    });
-    handleItemSelect(itemArr);
-    history.push("/");
-  };
-
   return (
     <Container maxWidth="xs">
       <Paper elevation={3}>
         <Toolbar>
           <Typography variant="h6">
-            {mode === "item" ? "시술 메뉴" : "할인"}
+            {mode === "items" ? "시술 메뉴" : "할인"}
           </Typography>
         </Toolbar>
         <Divider light />
-        {menu !== null && (
-          <FixedSizeList
-            height={500}
-            width={"100%"}
-            itemSize={70}
-            itemCount={Object.keys(menu.items).length}
-          >
-            {({ index, style }) => (
-              <ListItem style={style} key={index} dense divider={true}>
-                <ListItemText
-                  primary={menu.items[`i_${index + 1}`].name}
-                  secondary={`${menu.items[`i_${index + 1}`].price}원`}
-                />
-                <Checkbox
-                  checked={itemArr.some(ele => `i_${index + 1}` in ele)}
-                  onChange={handleChange}
-                  value="primary"
-                  inputProps={{ "aria-label": "Item checkbox" }}
-                  id={`i_${index + 1}`}
-                  checkedIcon={<CheckIcon />}
-                />
-              </ListItem>
-            )}
-          </FixedSizeList>
+        {menu !== null && mode === "items" && (
+          <CheckList
+            option={"items"}
+            menu={menu}
+            selectItem={selectItem}
+            handleItemSelect={handleItemSelect}
+            history={history}
+            selectDiscount={selectDiscount}
+          />
         )}
 
-        <button onClick={handleComplete}>
-          <Typography variant={"h6"}>완료</Typography>
-        </button>
+        {menu !== null && mode === "discounts" && (
+          <CheckList
+            option={"discounts"}
+            menu={menu}
+            selectItem={selectItem}
+            handleItemSelect={handleItemSelect}
+            history={history}
+            selectDiscount={selectDiscount}
+          />
+        )}
       </Paper>
     </Container>
   );
