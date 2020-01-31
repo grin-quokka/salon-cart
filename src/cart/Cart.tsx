@@ -4,7 +4,7 @@ import CartHeader from "./CartHeader";
 import AddBtnGroup from "./AddBtnGroup";
 import CartList, { calDiscounts } from "./CartList";
 import Sum from "./Sum";
-import { AppState, AppFnc } from "./interface";
+import { AppState, AppFnc } from "../interface";
 interface Props {
   selectItem: AppState["selectItem"];
   hadleItemEdit: AppFnc["hadleItemEdit"];

@@ -9,7 +9,7 @@ import {
 import { History, LocationState } from "history";
 import { RouteComponentProps } from "react-router";
 import CheckList from "./CheckList";
-import { AppState, AppFnc } from "./interface";
+import { AppState, AppFnc } from "../interface";
 
 interface Props extends RouteComponentProps<{ mode: string }> {
   menu: AppState["menu"];
@@ -19,7 +19,6 @@ interface Props extends RouteComponentProps<{ mode: string }> {
   selectDiscount: AppState["selectDiscount"];
 }
 
-// tslint:disable-next-line: max-func-body-length
 export default function AddToCart({
   menu,
   selectItem,

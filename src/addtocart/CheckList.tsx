@@ -9,8 +9,8 @@ import {
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import { History, LocationState } from "history";
-import { numberComma } from "./Sum";
-import { AppState, AppFnc } from "./interface";
+import { numberComma } from "../cart/Sum";
+import { AppState, AppFnc } from "../interface";
 
 interface Props {
   menu: AppState["menu"];

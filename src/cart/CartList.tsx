@@ -14,7 +14,7 @@ import {
 import BackspaceOutlinedIcon from "@material-ui/icons/BackspaceOutlined";
 import DiscountDialog from "./DiscountDialog";
 import { numberComma } from "./Sum";
-import { AppState, AppFnc } from "./interface";
+import { AppState, AppFnc } from "../interface";
 
 interface Props {
   selectItem: AppState["selectItem"];

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import Cart from "./Cart";
-import AddToCart from "./AddToCart";
+import Cart from "./cart/Cart";
+import AddToCart from "./addtocart/AddToCart";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import axios from "axios";
 import { RouteComponentProps } from "react-router";

@@ -14,7 +14,7 @@ import {
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import { numberComma } from "./Sum";
-import { AppState, AppFnc } from "./interface";
+import { AppState, AppFnc } from "../interface";
 
 interface Props {
   singleDiscount: { name: string; rate: number; items: string[] };
@@ -40,7 +40,7 @@ const dialogStyles = makeStyles((theme: Theme) =>
     }
   })
 );
-// tslint:disable-next-line: max-func-body-length
+
 export default function DiscountDialog({
   singleDiscount,
   selectItem,
