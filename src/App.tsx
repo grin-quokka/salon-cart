@@ -121,7 +121,6 @@ export default class App extends Component<any, AppState> {
           <Route
             path="/"
             exact
-            // tslint:disable-next-line: react-this-binding-issue
             component={() => (
               <Cart
                 selectItem={this.state.selectItem}
@@ -138,7 +137,6 @@ export default class App extends Component<any, AppState> {
           <Route
             path="/addtocart/:mode"
             exact
-            // tslint:disable-next-line: react-this-binding-issue
             render={(routeProps: RouteComponentProps<{ mode: string }>) => (
               <AddToCart
                 menu={this.state.menu}
