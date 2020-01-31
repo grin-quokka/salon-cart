@@ -1,6 +1,6 @@
 # salon-cart
 
-### 배포 : [salon-cart.surge.sh](salon-cart.surge.sh)
+### 배포 : salon-cart.surge.sh
 
 ### 스택
 - typescript
