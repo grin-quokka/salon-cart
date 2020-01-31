@@ -11,7 +11,7 @@ import {
   makeStyles,
   List
 } from "@material-ui/core";
-import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+import BackspaceOutlinedIcon from "@material-ui/icons/BackspaceOutlined";
 import DiscountDialog from "./DiscountDialog";
 import { numberComma } from "./Sum";
 interface Props {
@@ -62,6 +62,17 @@ const listStyles = makeStyles((theme: Theme) =>
       overflow: "auto",
       height: 500,
       padding: 0
+    },
+    listItem: {
+      display: "flex",
+      justifyContent: "space-between"
+    },
+    itemText: {
+      maxWidth: "70%"
+    },
+    selectItem: {
+      display: "flex",
+      justifyContent: "center"
     }
   })
 );
@@ -84,77 +95,100 @@ export default function CartList({
 
   return (
     <List className={classes.root}>
-      {selectItem.map((ele, index) => (
-        <ListItem key={index} dense divider={true}>
-          <ListItemText
-            primary={`${Object.values(selectItem[index])[0].name}`}
-            secondary={`${numberComma(
-              Number(Object.values(selectItem[index])[0].price)
-            )}원`}
-          />
-          <FormControl>
-            <Select
-              value={Object.values(selectItem[index])[0].count}
-              onChange={(
-                event: React.ChangeEvent<{ name?: string; value: unknown }>
-              ) => {
-                hadleItemEdit(
-                  Object.keys(selectItem[index])[0],
-                  Number(event.target.value)
-                );
-              }}
-            >
-              <MenuItem value="" disabled>
-                {`${Object.values(selectItem[index])[0].name}`}
-              </MenuItem>
-              {numberSelect.map(value => (
-                <MenuItem value={value}>{value}</MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <HighlightOffIcon
-            onClick={() => handleItemRemove(Object.keys(selectItem[index])[0])}
-          />
-        </ListItem>
-      ))}
-      {selectDiscount.map((ele, index) => (
-        <ListItem key={index} dense divider={true}>
-          <ListItemText
-            primary={`${Object.values(ele)[0].name}`}
-            secondary={
-              <React.Fragment>
-                {`${Object.values(ele)[0]
-                  .items.map(
-                    iKey =>
-                      `${findItem(iKey, selectItem).name} ${
-                        findItem(iKey, selectItem).count === 1
-                          ? ""
-                          : `x ${findItem(iKey, selectItem).count}`
-                      }`
-                  )
-                  .join(" , ")}`}
-                <Typography color="primary">{`-${numberComma(
-                  calDiscounts(
-                    Object.values(ele)[0].rate,
-                    Object.values(ele)[0].items,
-                    selectItem
-                  )
-                )}원(${(
-                  Object.values(ele)[0].rate * 100
-                ).toFixed()}%)`}</Typography>
-              </React.Fragment>
-            }
-          />
+      {selectItem.map((ele, index) => {
+        const itemKey = Object.keys(ele)[0];
+        const values = Object.values(ele)[0];
 
-          <DiscountDialog
-            singleDiscount={Object.values(ele)[0]}
-            selectItem={selectItem}
-            disKey={Object.keys(ele)[0]}
-            handleDisEdit={handleDisEdit}
-            handleDisRemove={handleDisRemove}
-          />
-        </ListItem>
-      ))}
+        return (
+          <ListItem
+            key={index}
+            dense
+            divider={true}
+            className={classes.listItem}
+          >
+            <ListItemText
+              className={classes.itemText}
+              primary={`${values.name}`}
+              secondary={`${numberComma(Number(values.price))}원`}
+            />
+            <FormControl>
+              <Select
+                value={values.count}
+                onChange={({ target: { value } }) => {
+                  hadleItemEdit(itemKey, Number(value));
+                }}
+              >
+                <MenuItem value="" disabled>
+                  {`${
+                    values.name.length > 10
+                      ? `${values.name.slice(0, 10)}...`
+                      : values.name
+                  }`}
+                </MenuItem>
+                {numberSelect.map(value => (
+                  <MenuItem className={classes.selectItem} value={value}>
+                    {value}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <BackspaceOutlinedIcon
+              color="primary"
+              onClick={() => handleItemRemove(itemKey)}
+            />
+          </ListItem>
+        );
+      })}
+      {selectDiscount.map((ele, index) => {
+        const discountKey = Object.keys(ele)[0];
+        const values = Object.values(ele)[0];
+
+        return (
+          <ListItem
+            key={index}
+            dense
+            divider={true}
+            className={classes.listItem}
+          >
+            <ListItemText
+              className={classes.itemText}
+              primary={`${values.name}`}
+              secondary={
+                <React.Fragment>
+                  {`${values.items
+                    .map(
+                      iKey =>
+                        `${
+                          findItem(iKey, selectItem).name.length > 10
+                            ? `${findItem(iKey, selectItem).name.slice(
+                                0,
+                                6
+                              )}...`
+                            : findItem(iKey, selectItem).name
+                        } ${
+                          findItem(iKey, selectItem).count === 1
+                            ? ""
+                            : `x ${findItem(iKey, selectItem).count}`
+                        }`
+                    )
+                    .join(" , ")}`}
+                  <Typography color="secondary">{`-${numberComma(
+                    calDiscounts(values.rate, values.items, selectItem)
+                  )}원(${(values.rate * 100).toFixed()}%)`}</Typography>
+                </React.Fragment>
+              }
+            />
+
+            <DiscountDialog
+              singleDiscount={values}
+              selectItem={selectItem}
+              disKey={discountKey}
+              handleDisEdit={handleDisEdit}
+              handleDisRemove={handleDisRemove}
+            />
+          </ListItem>
+        );
+      })}
     </List>
   );
 }

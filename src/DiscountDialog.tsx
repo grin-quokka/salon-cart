@@ -6,7 +6,11 @@ import {
   ListItem,
   ListItemText,
   Checkbox,
-  Button
+  Button,
+  ButtonGroup,
+  createStyles,
+  Theme,
+  makeStyles
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import { numberComma } from "./Sum";
@@ -28,6 +32,23 @@ interface Props {
   handleDisRemove: (disKey: string) => void;
 }
 
+const dialogStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    dialogContent: {
+      paddingRight: 0,
+      paddingLeft: 0,
+      overflow: "auto",
+      height: 400
+    },
+    listItemText: {
+      paddingLeft: 30
+    },
+    checkbox: {
+      paddingRight: 30
+    }
+  })
+);
+// tslint:disable-next-line: max-func-body-length
 export default function DiscountDialog({
   singleDiscount,
   selectItem,
@@ -35,6 +56,8 @@ export default function DiscountDialog({
   handleDisEdit,
   handleDisRemove
 }: Props): ReactElement {
+  const classes = dialogStyles();
+
   const [open, setOpen] = React.useState(false);
 
   const [discountsObj, setDiscountsObj] = useState(
@@ -79,35 +102,49 @@ export default function DiscountDialog({
         onClose={handleDailogClose}
         aria-labelledby="simple-dialog-title"
         open={open}
+        fullWidth
+        maxWidth="xs"
       >
         <DialogTitle id="simple-dialog-title">{discountsObj.name}</DialogTitle>
-        <List>
-          {selectItem.map((ele, index) => (
-            <ListItem key={index} dense>
-              <ListItemText
-                primary={`${`${Object.values(selectItem[index])[0].name} ${
-                  Object.values(selectItem[index])[0].count === 1
-                    ? ""
-                    : `x ${Object.values(selectItem[index])[0].count}`
-                }`}`}
-                secondary={`${numberComma(
-                  Number(Object.values(selectItem[index])[0].price)
-                )}원`}
-              />
-              <Checkbox
-                checked={discountsObj.items.includes(Object.keys(ele)[0])}
-                onChange={handleChange}
-                value="primary"
-                inputProps={{ "aria-label": "Item checkbox" }}
-                id={Object.keys(ele)[0]}
-                checkedIcon={<CheckIcon />}
-              />
-            </ListItem>
-          ))}
-          <ListItem button onClick={() => handleDisRemove(disKey)}>
-            <ListItemText primary="할인 삭제" color="primary" />
-          </ListItem>
+
+        <List className={classes.dialogContent}>
+          {selectItem.map((ele, index) => {
+            const itemKey = Object.keys(ele)[0];
+            const values = Object.values(ele)[0];
+
+            return (
+              <ListItem key={index} dense divider>
+                <ListItemText
+                  className={classes.listItemText}
+                  primary={`${`${
+                    values.name.length > 10
+                      ? `${values.name.slice(0, 6)}...`
+                      : values.name
+                  } ${values.count === 1 ? "" : `x ${values.count}`}`}`}
+                  secondary={`${numberComma(Number(values.price))}원`}
+                />
+                <Checkbox
+                  className={classes.checkbox}
+                  checked={discountsObj.items.includes(itemKey)}
+                  onChange={handleChange}
+                  value="primary"
+                  inputProps={{ "aria-label": "Item checkbox" }}
+                  id={itemKey}
+                  checkedIcon={<CheckIcon />}
+                />
+              </ListItem>
+            );
+          })}
         </List>
+
+        <ButtonGroup
+          fullWidth
+          color="primary"
+          aria-label="outlined primary button group"
+        >
+          <Button onClick={() => handleDisRemove(disKey)}>삭제</Button>
+          <Button onClick={handleDailogClose}>완료</Button>
+        </ButtonGroup>
       </Dialog>
     </React.Fragment>
   );

@@ -4,7 +4,8 @@ import {
   ListItem,
   ListItemText,
   Checkbox,
-  Typography
+  Typography,
+  Button
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import { History, LocationState } from "history";
@@ -169,9 +170,14 @@ export default function CheckList({
         )}
       </FixedSizeList>
 
-      <button onClick={handleComplete}>
+      <Button
+        onClick={handleComplete}
+        fullWidth
+        color="primary"
+        variant="outlined"
+      >
         <Typography variant={"h6"}>완료</Typography>
-      </button>
+      </Button>
     </>
   );
 }

@@ -12,6 +12,9 @@ const btnBroupStyles = makeStyles((theme: Theme) =>
     },
     btnContainer: {
       width: "40%"
+    },
+    link: {
+      textDecoration: "none"
     }
   })
 );
@@ -21,7 +24,7 @@ export default function AddBtnGroup(): ReactElement {
   return (
     <div className={classes.root}>
       <div className={classes.btnContainer}>
-        <Link to={"/addtocart/items"}>
+        <Link to={"/addtocart/items"} className={classes.link}>
           <Button variant="outlined" color="primary" fullWidth>
             <AddIcon />
             시술
@@ -29,7 +32,7 @@ export default function AddBtnGroup(): ReactElement {
         </Link>
       </div>
       <div className={classes.btnContainer}>
-        <Link to={"/addtocart/discounts"}>
+        <Link to={"/addtocart/discounts"} className={classes.link}>
           <Button variant="outlined" color="secondary" fullWidth>
             <AddIcon /> 할인
           </Button>
