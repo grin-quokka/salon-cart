@@ -2,19 +2,16 @@ import React, { ReactElement } from "react";
 import {
   ListItem,
   ListItemText,
-  FormControl,
-  Select,
-  MenuItem,
   Typography,
   createStyles,
   Theme,
   makeStyles,
   List
 } from "@material-ui/core";
-import BackspaceOutlinedIcon from "@material-ui/icons/BackspaceOutlined";
 import DiscountDialog from "./DiscountDialog";
 import { numberComma } from "./Sum";
 import { AppState, AppFnc } from "../interface";
+import CartListItem from "./CartListItem";
 
 interface Props {
   selectItem: AppState["selectItem"];
@@ -72,7 +69,6 @@ const listStyles = makeStyles((theme: Theme) =>
   })
 );
 
-// tslint:disable-next-line: max-func-body-length
 export default function CartList({
   selectItem,
   hadleItemEdit,
@@ -81,11 +77,6 @@ export default function CartList({
   handleDisEdit,
   handleDisRemove
 }: Props): ReactElement {
-  const numberSelect: number[] = [];
-  for (let i = 1; i <= 10; i++) {
-    numberSelect.push(i);
-  }
-
   const classes = listStyles();
 
   return (
@@ -95,43 +86,13 @@ export default function CartList({
         const values = Object.values(ele)[0];
 
         return (
-          <ListItem
-            key={index}
-            dense
-            divider={true}
-            className={classes.listItem}
-          >
-            <ListItemText
-              className={classes.itemText}
-              primary={`${values.name}`}
-              secondary={`${numberComma(Number(values.price))}원`}
-            />
-            <FormControl>
-              <Select
-                value={values.count}
-                onChange={({ target: { value } }) => {
-                  hadleItemEdit(itemKey, Number(value));
-                }}
-              >
-                <MenuItem value="" disabled>
-                  {`${
-                    values.name.length > 10
-                      ? `${values.name.slice(0, 10)}...`
-                      : values.name
-                  }`}
-                </MenuItem>
-                {numberSelect.map(value => (
-                  <MenuItem className={classes.selectItem} value={value}>
-                    {value}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-            <BackspaceOutlinedIcon
-              color="primary"
-              onClick={() => handleItemRemove(itemKey)}
-            />
-          </ListItem>
+          <CartListItem
+            index={index}
+            itemKey={itemKey}
+            values={values}
+            hadleItemEdit={hadleItemEdit}
+            handleItemRemove={handleItemRemove}
+          />
         );
       })}
       {selectDiscount.map((ele, index) => {
