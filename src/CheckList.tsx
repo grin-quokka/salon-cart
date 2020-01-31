@@ -133,7 +133,7 @@ export default function CheckList({
   return (
     <>
       <FixedSizeList
-        height={500}
+        height={535}
         width={"100%"}
         itemSize={70}
         itemCount={Object.keys(menu[option]).length}

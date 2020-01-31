@@ -1,12 +1,15 @@
 import React, { ReactElement } from "react";
-import { FixedSizeList } from "react-window";
 import {
   ListItem,
   ListItemText,
   FormControl,
   Select,
   MenuItem,
-  Typography
+  Typography,
+  createStyles,
+  Theme,
+  makeStyles,
+  List
 } from "@material-ui/core";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import DiscountDialog from "./DiscountDialog";
@@ -49,6 +52,19 @@ export const calDiscounts = (
   return sum;
 };
 
+const listStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      width: "100%",
+      backgroundColor: theme.palette.background.paper,
+      position: "relative",
+      overflow: "auto",
+      height: 500,
+      padding: 0
+    }
+  })
+);
+
 // tslint:disable-next-line: max-func-body-length
 export default function CartList({
   selectItem,
@@ -63,8 +79,10 @@ export default function CartList({
     numberSelect.push(i);
   }
 
+  const classes = listStyles();
+
   return (
-    <>
+    <List className={classes.root}>
       {selectItem.map((ele, index) => (
         <ListItem key={index} dense divider={true}>
           <ListItemText
@@ -132,6 +150,6 @@ export default function CartList({
           />
         </ListItem>
       ))}
-    </>
+    </List>
   );
 }
