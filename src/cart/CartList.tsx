@@ -99,7 +99,10 @@ export default function CartList({
         const discountKey = Object.keys(ele)[0];
         const values = Object.values(ele)[0];
 
-        if (values.items.length === 0) return;
+        if (values.items.length === 0) {
+          handleDisRemove(discountKey);
+          return;
+        }
 
         return (
           <ListItem
