@@ -9,36 +9,14 @@ import {
 import { History, LocationState } from "history";
 import { RouteComponentProps } from "react-router";
 import CheckList from "./CheckList";
+import { AppState, AppFnc } from "./interface";
 
 interface Props extends RouteComponentProps<{ mode: string }> {
-  menu: {
-    items: {
-      [itemKey: string]: { count: number; name: string; price: number };
-    };
-    discounts: { [discountKey: string]: { name: string; rate: number } };
-    currency_code: "string";
-  } | null;
-  selectItem: {
-    [itemKey: string]: { count: number; name: string; price: number };
-  }[];
-  handleItemSelect: (
-    arr:
-      | {
-          [itemKey: string]: { count: number; name: string; price: number };
-        }[]
-      | {
-          [discountKey: string]: {
-            name: string;
-            rate: number;
-            items: string[];
-          };
-        }[],
-    arrName: string
-  ) => void;
+  menu: AppState["menu"];
+  selectItem: AppState["selectItem"];
+  handleItemSelect: AppFnc["handleItemSelect"];
   history: History<LocationState>;
-  selectDiscount: {
-    [discountKey: string]: { name: string; rate: number; items: string[] };
-  }[];
+  selectDiscount: AppState["selectDiscount"];
 }
 
 // tslint:disable-next-line: max-func-body-length

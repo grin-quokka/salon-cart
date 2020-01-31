@@ -14,22 +14,14 @@ import {
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import { numberComma } from "./Sum";
+import { AppState, AppFnc } from "./interface";
 
 interface Props {
   singleDiscount: { name: string; rate: number; items: string[] };
-  selectItem: {
-    [itemKey: string]: {
-      count: number;
-      name: string;
-      price: number;
-    };
-  }[];
+  selectItem: AppState["selectItem"];
   disKey: string;
-  handleDisEdit: (
-    disKey: string,
-    discountsObj: { name: string; rate: number; items: string[] }
-  ) => void;
-  handleDisRemove: (disKey: string) => void;
+  handleDisEdit: AppFnc["handleDisEdit"];
+  handleDisRemove: AppFnc["handleDisRemove"];
 }
 
 const dialogStyles = makeStyles((theme: Theme) =>
