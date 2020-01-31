@@ -99,6 +99,8 @@ export default function CartList({
         const discountKey = Object.keys(ele)[0];
         const values = Object.values(ele)[0];
 
+        if (values.items.length === 0) return;
+
         return (
           <ListItem
             key={index}

@@ -44,7 +44,7 @@ export default function Cart({
     <Container maxWidth="xs">
       <Paper elevation={3}>
         <CartHeader customerName={"조아라"} />
-        <AddBtnGroup />
+        <AddBtnGroup selectItem={selectItem} />
         <CartList
           selectItem={selectItem}
           hadleItemEdit={hadleItemEdit}

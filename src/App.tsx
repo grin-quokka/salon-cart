@@ -5,7 +5,6 @@ import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import axios from "axios";
 import { RouteComponentProps } from "react-router";
 import { AppState } from "./interface";
-
 export default class App extends Component<any, AppState> {
   state: AppState = {
     loading: true,
@@ -133,7 +132,7 @@ export default class App extends Component<any, AppState> {
               />
             )}
           />
-          (
+
           <Route
             path="/addtocart/:mode"
             exact
@@ -149,7 +148,7 @@ export default class App extends Component<any, AppState> {
               />
             )}
           />
-          )
+
           <Redirect path="*" to="/" />
         </Switch>
       </BrowserRouter>
