@@ -7,6 +7,9 @@
 - react, react-router-dom
 - [material-ui](https://material-ui.com/) : 디자인
 
+### .env file
+- REACT_APP_API_KEY=데이터_API_URL
+
 ### 기능
 - 장바구니에 시술 아이템 추가, 수량 변경, 삭제
 - 장바구니에 할인 메뉴 추가, 할인 적용할 시술 변경, 삭제
