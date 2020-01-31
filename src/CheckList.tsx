@@ -8,6 +8,7 @@ import {
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import { History, LocationState } from "history";
+import { numberComma } from "./Sum";
 
 interface Props {
   menu: {
@@ -144,7 +145,9 @@ export default function CheckList({
               primary={menu[option][`${option[0]}_${index + 1}`].name}
               secondary={
                 option === "items"
-                  ? `${menu[option][`i_${index + 1}`].price}원`
+                  ? `${numberComma(
+                      Number(menu[option][`i_${index + 1}`].price)
+                    )}원`
                   : `${(
                       menu.discounts[`d_${index + 1}`].rate * 100
                     ).toFixed()}%`

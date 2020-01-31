@@ -13,6 +13,7 @@ import {
 } from "@material-ui/core";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import DiscountDialog from "./DiscountDialog";
+import { numberComma } from "./Sum";
 interface Props {
   selectItem: {
     [itemKey: string]: { count: number; name: string; price: number };
@@ -87,7 +88,9 @@ export default function CartList({
         <ListItem key={index} dense divider={true}>
           <ListItemText
             primary={`${Object.values(selectItem[index])[0].name}`}
-            secondary={`${Object.values(selectItem[index])[0].price}원`}
+            secondary={`${numberComma(
+              Number(Object.values(selectItem[index])[0].price)
+            )}원`}
           />
           <FormControl>
             <Select
@@ -130,10 +133,12 @@ export default function CartList({
                       }`
                   )
                   .join(" , ")}`}
-                <Typography color="primary">{`-${calDiscounts(
-                  Object.values(ele)[0].rate,
-                  Object.values(ele)[0].items,
-                  selectItem
+                <Typography color="primary">{`-${numberComma(
+                  calDiscounts(
+                    Object.values(ele)[0].rate,
+                    Object.values(ele)[0].items,
+                    selectItem
+                  )
                 )}원(${(
                   Object.values(ele)[0].rate * 100
                 ).toFixed()}%)`}</Typography>

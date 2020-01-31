@@ -9,6 +9,7 @@ import {
   Button
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
+import { numberComma } from "./Sum";
 
 interface Props {
   singleDiscount: { name: string; rate: number; items: string[] };
@@ -89,7 +90,9 @@ export default function DiscountDialog({
                     ? ""
                     : `x ${Object.values(selectItem[index])[0].count}`
                 }`}`}
-                secondary={`${Object.values(selectItem[index])[0].price}원`}
+                secondary={`${numberComma(
+                  Number(Object.values(selectItem[index])[0].price)
+                )}원`}
               />
               <Checkbox
                 checked={discountsObj.items.includes(Object.keys(ele)[0])}
