@@ -4,41 +4,21 @@ import {
   ListItem,
   ListItemText,
   Checkbox,
-  Typography
+  Typography,
+  Button
 } from "@material-ui/core";
 import CheckIcon from "@material-ui/icons/Check";
 import { History, LocationState } from "history";
+import { numberComma } from "../cart/Sum";
+import { AppState, AppFnc } from "../interface";
 
 interface Props {
-  menu: {
-    items: {
-      [itemKey: string]: { count: number; name: string; price: number };
-    };
-    discounts: { [discountKey: string]: { name: string; rate: number } };
-    currency_code: "string";
-  };
-  selectItem: {
-    [itemKey: string]: { count: number; name: string; price: number };
-  }[];
-  handleItemSelect: (
-    arr:
-      | {
-          [itemKey: string]: { count: number; name: string; price: number };
-        }[]
-      | {
-          [discountKey: string]: {
-            name: string;
-            rate: number;
-            items: string[];
-          };
-        }[],
-    arrName: string
-  ) => void;
+  menu: AppState["menu"];
+  selectItem: AppState["selectItem"];
+  handleItemSelect: AppFnc["handleItemSelect"];
   history: History<LocationState>;
   option: "items" | "discounts";
-  selectDiscount: {
-    [discountKey: string]: { name: string; rate: number; items: string[] };
-  }[];
+  selectDiscount: AppState["selectDiscount"];
 }
 
 // tslint:disable-next-line: max-func-body-length
@@ -131,44 +111,53 @@ export default function CheckList({
   };
 
   return (
-    <>
-      <FixedSizeList
-        height={500}
-        width={"100%"}
-        itemSize={70}
-        itemCount={Object.keys(menu[option]).length}
-      >
-        {({ index, style }) => (
-          <ListItem style={style} key={index} dense divider={true}>
-            <ListItemText
-              primary={menu[option][`${option[0]}_${index + 1}`].name}
-              secondary={
-                option === "items"
-                  ? `${menu[option][`i_${index + 1}`].price}원`
-                  : `${(
-                      menu.discounts[`d_${index + 1}`].rate * 100
-                    ).toFixed()}%`
-              }
-            />
-            <Checkbox
-              checked={
-                option === "items"
-                  ? itemArr.some(ele => `i_${index + 1}` in ele)
-                  : disCntArr.some(ele => `d_${index + 1}` in ele)
-              }
-              onChange={e => handleChange(e, option)}
-              value="primary"
-              inputProps={{ "aria-label": "Item checkbox" }}
-              id={`${option[0]}_${index + 1}`}
-              checkedIcon={<CheckIcon />}
-            />
-          </ListItem>
-        )}
-      </FixedSizeList>
+    <React.Fragment>
+      {menu !== null && (
+        <FixedSizeList
+          height={535}
+          width={"100%"}
+          itemSize={70}
+          itemCount={Object.keys(menu[option]).length}
+        >
+          {({ index, style }) => (
+            <ListItem style={style} key={index} dense divider={true}>
+              <ListItemText
+                primary={menu[option][`${option[0]}_${index + 1}`].name}
+                secondary={
+                  option === "items"
+                    ? `${numberComma(
+                        Number(menu[option][`i_${index + 1}`].price)
+                      )}원`
+                    : `${(
+                        menu.discounts[`d_${index + 1}`].rate * 100
+                      ).toFixed()}%`
+                }
+              />
+              <Checkbox
+                checked={
+                  option === "items"
+                    ? itemArr.some(ele => `i_${index + 1}` in ele)
+                    : disCntArr.some(ele => `d_${index + 1}` in ele)
+                }
+                onChange={e => handleChange(e, option)}
+                value="primary"
+                inputProps={{ "aria-label": "Item checkbox" }}
+                id={`${option[0]}_${index + 1}`}
+                checkedIcon={<CheckIcon />}
+              />
+            </ListItem>
+          )}
+        </FixedSizeList>
+      )}
 
-      <button onClick={handleComplete}>
+      <Button
+        onClick={handleComplete}
+        fullWidth
+        color="primary"
+        variant="outlined"
+      >
         <Typography variant={"h6"}>완료</Typography>
-      </button>
-    </>
+      </Button>
+    </React.Fragment>
   );
 }

@@ -4,21 +4,14 @@ import CartHeader from "./CartHeader";
 import AddBtnGroup from "./AddBtnGroup";
 import CartList, { calDiscounts } from "./CartList";
 import Sum from "./Sum";
-
+import { AppState, AppFnc } from "../interface";
 interface Props {
-  selectItem: {
-    [itemKey: string]: { count: number; name: string; price: number };
-  }[];
-  hadleItemEdit: (itemKey: string, count: number) => void;
-  handleItemRemove: (itemKey: string) => void;
-  selectDiscount: {
-    [discountKey: string]: { name: string; rate: number; items: string[] };
-  }[];
-  handleDisEdit: (
-    disKey: string,
-    discountsObj: { name: string; rate: number; items: string[] }
-  ) => void;
-  handleDisRemove: (disKey: string) => void;
+  selectItem: AppState["selectItem"];
+  hadleItemEdit: AppFnc["hadleItemEdit"];
+  handleItemRemove: AppFnc["handleItemRemove"];
+  selectDiscount: AppState["selectDiscount"];
+  handleDisEdit: AppFnc["handleDisEdit"];
+  handleDisRemove: AppFnc["handleDisRemove"];
   currency: string | undefined;
 }
 

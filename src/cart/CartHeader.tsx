@@ -6,7 +6,7 @@ interface Props {
 
 export default function CartHeader({ customerName }: Props): ReactElement {
   return (
-    <AppBar position="static">
+    <AppBar position="static" style={{ backgroundColor: "#9b86ee" }}>
       <Toolbar>
         <Typography variant="h6">{customerName}</Typography>
       </Toolbar>

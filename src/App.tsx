@@ -1,38 +1,18 @@
 import React, { Component } from "react";
-import Cart from "./Cart";
-import AddToCart from "./AddToCart";
+import Cart from "./cart/Cart";
+import AddToCart from "./addtocart/AddToCart";
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom";
 import axios from "axios";
 import { RouteComponentProps } from "react-router";
+import { AppState } from "./interface";
 
-interface Props {}
-interface State {
-  loading: boolean;
-  menu: {
-    items: {
-      [itemKey: string]: { count: number; name: string; price: number };
-    };
-    discounts: { [discountKey: string]: { name: string; rate: number } };
-    currency_code: "string";
-  } | null;
-  selectItem: {
-    [itemKey: string]: { count: number; name: string; price: number };
-  }[];
-  selectDiscount: {
-    [discountKey: string]: { name: string; rate: number; items: string[] };
-  }[];
-}
-
-export default class App extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      loading: true,
-      menu: null,
-      selectItem: [],
-      selectDiscount: []
-    };
-  }
+export default class App extends Component<any, AppState> {
+  state: AppState = {
+    loading: true,
+    menu: null,
+    selectItem: [],
+    selectDiscount: []
+  };
 
   async componentDidMount() {
     const api = axios.create({
@@ -52,7 +32,7 @@ export default class App extends Component<Props, State> {
   }
 
   handleItemSelect = (
-    arr: State["selectItem"] | State["selectDiscount"],
+    arr: AppState["selectItem"] | AppState["selectDiscount"],
     arrName: string
   ) => {
     this.setState({ ...this.state, [arrName]: [...arr] });
@@ -141,7 +121,6 @@ export default class App extends Component<Props, State> {
           <Route
             path="/"
             exact
-            // tslint:disable-next-line: react-this-binding-issue
             component={() => (
               <Cart
                 selectItem={this.state.selectItem}
@@ -158,7 +137,6 @@ export default class App extends Component<Props, State> {
           <Route
             path="/addtocart/:mode"
             exact
-            // tslint:disable-next-line: react-this-binding-issue
             render={(routeProps: RouteComponentProps<{ mode: string }>) => (
               <AddToCart
                 menu={this.state.menu}
