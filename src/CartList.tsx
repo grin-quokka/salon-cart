@@ -50,7 +50,7 @@ export const calDiscounts = (
     sum +=
       findItem(ele, selectItem).count * findItem(ele, selectItem).price * rate;
   });
-  return sum;
+  return Math.round(sum);
 };
 
 const listStyles = makeStyles((theme: Theme) =>
